@@ -4,11 +4,11 @@ CREATE COMPUTE MODULE CustomerInformation_CSV2JSON
         DECLARE COUNT INTEGER CARDINALITY(InputRoot.DFDL.Converter.record[]);
         DECLARE i INTEGER 1;
 
-        -- JSON array için root element oluştur
+        -- Create a root element for the JSON array
         CREATE FIELD OutputRoot.JSON.Data IDENTITY (JSON.Array)Data;
 
         FOR source AS InputRoot.DFDL.Converter.record[] DO
-            -- Her bir kaydı bir JSON nesnesine dönüştür ve array'e ekle
+            -- Transform each record into a JSON object and add it to the array
             SET OutputRoot.JSON.Data.Item[i].ID = CAST(source.ID AS INTEGER);
             SET OutputRoot.JSON.Data.Item[i].name = source.name;
             SET OutputRoot.JSON.Data.Item[i].surname = source.surname;
