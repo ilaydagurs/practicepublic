@@ -1,0 +1,25 @@
+CREATE COMPUTE MODULE CustomerInformation_CSV2JSON
+    CREATE FUNCTION Main() RETURNS BOOLEAN
+    BEGIN
+        DECLARE COUNT INTEGER CARDINALITY(InputRoot.DFDL.Converter.record[]);
+        DECLARE i INTEGER 1;
+
+        -- JSON array için root element oluştur
+        CREATE FIELD OutputRoot.JSON.Data IDENTITY (JSON.Array)Data;
+
+        FOR source AS InputRoot.DFDL.Converter.record[] DO
+            -- Her bir kaydı bir JSON nesnesine dönüştür ve array'e ekle
+            SET OutputRoot.JSON.Data.Item[i].ID = CAST(source.ID AS INTEGER);
+            SET OutputRoot.JSON.Data.Item[i].name = source.name;
+            SET OutputRoot.JSON.Data.Item[i].surname = source.surname;
+            SET OutputRoot.JSON.Data.Item[i].email = source.email;
+            SET OutputRoot.JSON.Data.Item[i].phone = source.phone;
+
+            SET i = i + 1;
+        END FOR;
+
+        RETURN TRUE;
+    END;
+END MODULE;
+
+
